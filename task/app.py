@@ -16,8 +16,9 @@ from task.tools.web_search import WebSearchTool
 DIAL_ENDPOINT = "https://ai-proxy.lab.epam.com"
 API_KEY = os.getenv('DIAL_API_KEY')
 
+
 def main():
-    #TODO:
+    # TODO:
     # 1. Create UserClient
     # 2. Create DialClient with all tools (WebSearchTool, GetUserByIdTool, SearchUsersTool, CreateUserTool, UpdateUserTool, DeleteUserTool)
     # 3. Create Conversation and add there first System message with SYSTEM_PROMPT (you need to write it in task.prompts#SYSTEM_PROMPT)
@@ -26,11 +27,37 @@ def main():
     #    - Add User message to Conversation
     #    - Call DialClient with conversation history
     #    - Add Assistant message to Conversation and print its content
-    raise NotImplementedError()
+
+    user_client = UserClient()
+    user_tools = [GetUserByIdTool(user_client)]
+    dial_client = DialClient(
+        api_key=API_KEY, endpoint=DIAL_ENDPOINT, deployment_name="gpt-4o", tools=user_tools)
+
+    chat_history = Conversation()
+    chat_history.add_message(Message(role=Role.SYSTEM, content=SYSTEM_PROMPT))
+
+    while True:
+        user_input = input("> ").strip()
+        if not user_input:
+            continue
+
+        if user_input in ("/exit", "/quit"):
+            print("Goodbye!")
+            break
+
+        chat_history.add_message(Message(role=Role.USER, content=user_input))
+
+        ai_response = dial_client.get_completion(
+            messages=chat_history.messages)
+        chat_history.add_message(
+            Message(role=Role.AI, content=ai_response.content))
+
+        print(f"AI: {ai_response.content}")
 
 
-main()
+if __name__ == "__main__":
+    main()
 
-#TODO:
+# TODO:
 # Request sample:
 # Add Andrej Karpathy as a new user

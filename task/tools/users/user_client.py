@@ -6,6 +6,7 @@ from task.tools.users.models.user_info import UserCreate, UserUpdate
 
 USER_SERVICE_ENDPOINT = "http://localhost:8041"
 
+
 class UserClient:
 
     def __user_to_string(self, user: dict[str, Any]):
@@ -27,7 +28,8 @@ class UserClient:
     def get_user(self, user_id: int) -> str:
         headers = {"Content-Type": "application/json"}
 
-        response = requests.get(url=f"{USER_SERVICE_ENDPOINT}/v1/users/{user_id}", headers=headers)
+        response = requests.get(
+            url=f"{USER_SERVICE_ENDPOINT}/v1/users/{user_id}", headers=headers)
 
         if response.status_code == 200:
             data = response.json()
@@ -54,7 +56,8 @@ class UserClient:
         if gender:
             params["gender"] = gender
 
-        response = requests.get(url=USER_SERVICE_ENDPOINT + "/v1/users/search", headers=headers, params=params)
+        response = requests.get(
+            url=USER_SERVICE_ENDPOINT + "/v1/users/search", headers=headers, params=params)
 
         if response.status_code == 200:
             data = response.json()
@@ -94,7 +97,8 @@ class UserClient:
     def delete_user(self, user_id: int) -> str:
         headers = {"Content-Type": "application/json"}
 
-        response = requests.delete(url=f"{USER_SERVICE_ENDPOINT}/v1/users/{user_id}", headers=headers)
+        response = requests.delete(
+            url=f"{USER_SERVICE_ENDPOINT}/v1/users/{user_id}", headers=headers)
 
         if response.status_code == 204:
             return "User successfully deleted"
