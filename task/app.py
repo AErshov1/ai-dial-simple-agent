@@ -29,7 +29,13 @@ def main():
     #    - Add Assistant message to Conversation and print its content
 
     user_client = UserClient()
-    user_tools = [GetUserByIdTool(user_client)]
+    user_tools = [
+        GetUserByIdTool(user_client),
+        CreateUserTool(user_client),
+        DeleteUserTool(user_client),
+        SearchUsersTool(user_client),
+        UpdateUserTool(user_client),
+    ]
     dial_client = DialClient(
         api_key=API_KEY, endpoint=DIAL_ENDPOINT, deployment_name="gpt-4o", tools=user_tools)
 
